@@ -15,17 +15,19 @@ public_users.post("/register", (req,res) => {
     return;
   }
 
-  let takenUsernames = [];
+  // let takenUsernames = [];
 
-  for(index in users){
-    takenUsernames.push(users[index].username);
-    console.log(index);
-    console.log(users[index].username);
-    console.log(users)
-  }
+  // for(index in users){
+  //   takenUsernames.push(users[index].username);
+  // }
 
-  if(takenUsernames.includes(username)){
-    res.status(409).send("Username is in use");
+  // if(takenUsernames.includes(username)){
+  //   res.status(409).send("Username is in use");
+  //   return;
+  // }
+
+  if(isValid(username)){
+    res.status(409).send("Username already in use");
     return;
   }
 
@@ -38,30 +40,37 @@ public_users.post("/register", (req,res) => {
 });
 
 // Get the book list available in the shop
-public_users.get('/',function (req, res) {
+public_users.get('/', async (req, res) => {
 
   //Write your code here
-  return res.status(200).send(books);
+
+  let allBooks = await books;
+
+  return res.status(200).send(allBooks);
 });
 
 // Get book details based on ISBN
-public_users.get('/isbn/:isbn',function (req, res) {
+public_users.get('/isbn/:isbn', async (req, res) => {
 
   //code
   const isbn = req.params.isbn;
 
-  res.status(200).send(books[isbn]);
+  let allBooks = await books;
+
+  res.status(200).send(allBooks[isbn]);
  });
   
 // Get book details based on author
-public_users.get('/author/:author',function (req, res) {
+public_users.get('/author/:author', async (req, res) => {
 
   //code
   const author = req.params.author;
 
-  for (index in books){
-    if(books[index].author === author){
-      res.status(200).send(books[index])
+  let allBooks = await books;
+
+  for (index in allBooks){
+    if(allBooks[index].author === author){
+      res.status(200).send(allBooks[index])
       return;
     }
   }
@@ -70,14 +79,16 @@ public_users.get('/author/:author',function (req, res) {
 });
 
 // Get all books based on title
-public_users.get('/title/:title',function (req, res) {
+public_users.get('/title/:title', async (req, res) => {
 
   //code
   const title = req.params.title;
 
-  for (index in books){
-    if(books[index].title === title){
-      res.status(200).send(books[index])
+  let allBooks = await books;
+
+  for (index in allBooks){
+    if(allBooks[index].title === title){
+      res.status(200).send(allBooks[index])
       return;
     }
   }
